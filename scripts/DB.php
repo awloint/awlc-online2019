@@ -155,14 +155,14 @@ class DB
      */
     public function updatePaid($tablename, $details, $chosenfield)
     {
-        $sql = "UPDATE {$tablename} SET {$set} WHERE {$chosenfield} = ?";
+        $sql = "UPDATE {$tablename} SET {$details} WHERE {$chosenfield} = ?";
 
         // Create the prepared statement
         $stmt = $this->_conn->prepare($sql);
 
         // Bind each parameter
-        for ($i=0; $i<count($fields); $i++) {
-            $stmt->bindParam($i+1, $fields[$i]);
+        for ($i=0; $i<count($details); $i++) {
+            $stmt->bindParam($i+1, $details[$i]);
         }
 
         // Execute the Query
