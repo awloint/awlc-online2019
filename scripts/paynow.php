@@ -13,10 +13,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$_POST = json_decode(file_get_contents('php://input'), true);
+// echo json_encode($_POST);
 //pull in the database
-require 'dbconfig.php';
-require 'Paystack.php';
+require '../config.php';
+require './Paystack.php';
+require './DB.php';
+require './Notify.php';
+require './Newsletter.php';
 
 // Capture Post Data that is coming from the form
 $firstName = $_POST['firstName'];
@@ -32,6 +35,9 @@ $firstConference = $_POST['firstConference'];
 $currency = $_POST['currency'];
 $amount = $_POST['amount'];
 
+$name = $firstName . " " . $lastName;
+require './emails.php';
+
 //  Connect to the Database using PDO
 $dsn = "mysql:host=$host;dbname=$db";
 //Create PDO Connection with the dbconfig data
@@ -45,7 +51,7 @@ $usercheckquery = $conn->prepare($usercheck);
 $usercheckquery->execute(array("$email"));
 //Fetch the Result
 $usercheckquery->rowCount();
-if ($usercheckquery->rowCount() > 0) {   
+if ($usercheckquery->rowCount() > 0) {
     // Check to ss if the user has paid
     $usercheckpaid = "SELECT * FROM awlc2019 WHERE email=? AND paid='yes'";
     // prepare the Query
@@ -100,28 +106,28 @@ if ($usercheckquery->rowCount() > 0) {
         echo json_encode($trx->data->authorization_url);
 
     }
-    
+
 } else {
     // Insert the user into the database
-    $enteruser = "INSERT into awlc2019 (firstName, 
-                        lastName, 
-                        email, 
-                        phone, 
-                        country, 
-                        occupation, 
-                        organisation, 
-                        member, 
-                        referrer, 
+    $enteruser = "INSERT into awlc2019 (firstName,
+                        lastName,
+                        email,
+                        phone,
+                        country,
+                        occupation,
+                        organisation,
+                        member,
+                        referrer,
                         firstConference)
-                VALUES (:firstName, 
-                        :lastName, 
-                        :email, 
-                        :phone, 
-                        :country, 
-                        :occupation, 
-                        :organisation, 
-                        :member, 
-                        :referrer, 
+                VALUES (:firstName,
+                        :lastName,
+                        :email,
+                        :phone,
+                        :country,
+                        :occupation,
+                        :organisation,
+                        :member,
+                        :referrer,
                         :firstConference)";
     //  Prepare Query
     $enteruserquery = $conn->prepare($enteruser);
@@ -177,12 +183,6 @@ if ($usercheckquery->rowCount() > 0) {
             )
             ]
         );
-
-        // status should be true if there was a successful call
-        // if (!$trx->status) {
-        //     exit($trx->message);
-        // }
-
 
         echo json_encode($trx->data->authorization_url);
     }
