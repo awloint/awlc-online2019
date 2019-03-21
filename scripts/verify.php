@@ -52,7 +52,7 @@ if ('success' == $trx->data->status) {
         if ($db->userExists($email, "awlcrwandavirtual")) {
             // Select the user
             $result = $db->userSelect($email, "awlcrwandavirtual");
-            var_dump($result);
+            dd($result);
             // get the phone number
             // while ($result) {
             //     $phone = $result['phone'];
