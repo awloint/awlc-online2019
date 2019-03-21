@@ -170,7 +170,7 @@ class DB
         $stmt->bindValue($wherefield, $wherevalue);
 
         // Execute the Query
-        $stmt->execute();
+        $stmt->execute($details);
 
         //  Fetch Result
         $stmt->rowCount();
