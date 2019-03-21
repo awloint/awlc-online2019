@@ -161,8 +161,8 @@ class DB
         $stmt = $this->_conn->prepare($sql);
 
         // Bind each parameter
-        for ($i=0; $i<count($details); $i++) {
-            $stmt->bindParam($i+1, $details[$i]);
+        foreach ($details as $key => $value) {
+            $stmt->bindParam($key, $value);
         }
 
         // Execute the Query
