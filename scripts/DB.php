@@ -153,28 +153,30 @@ class DB
      *
      * @return void
      */
-    public function updatePaid($tablename, $details = [], $chosenfield)
+    public function updatePaid($tablename, $details , $chosenfield)
     {
-        $sql = "UPDATE {$tablename} SET {$details} WHERE {$chosenfield} = ?";
+        $columns = array_keys($details);
+        $sql = "UPDATE $tablename SET " . implode('=?, ' , $columns) . " WHERE $chosenfield = ?";
+        echo json_encode($sql);
 
-        // Create the prepared statement
-        $stmt = $this->_conn->prepare($sql);
+        // // Create the prepared statement
+        // $stmt = $this->_conn->prepare($sql);
 
-        // Bind each parameter
-        foreach ($details as $key => $value) {
-            $stmt->bindValue($key, $value);
-        }
+        // // Bind each parameter
+        // foreach ($details as $key => $value) {
+        //     $stmt->bindValue($key, $value);
+        // }
 
-        // Execute the Query
-        $stmt->execute();
+        // // Execute the Query
+        // $stmt->execute();
 
-        //  Fetch Result
-        $stmt->rowCount();
+        // //  Fetch Result
+        // $stmt->rowCount();
 
-        // Check if execution was successfull
-        if ($stmt->rowCount() > 0) {
-            return true;
-        }
-        return false;
+        // // Check if execution was successfull
+        // if ($stmt->rowCount() > 0) {
+        //     return true;
+        // }
+        // return false;
     }
 }

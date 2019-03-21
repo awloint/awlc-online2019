@@ -48,43 +48,43 @@ if ('success' == $trx->data->status) {
     // Update the database with paid
     if ($db->updatePaid("awlcrwandavirtual", $details, $email)) {
 
-        //Query the database with Customer email to get phone number;
-        if ($db->userExists($email, "awlcrwandavirtual")) {
-            // Select the user
-            $result = $db->userSelect($email, "awlcrwandavirtual");
-            // get the phone number
-            while ($result) {
-                $phone = $result['phone'];
-                $firstName = $result['firstName'];
-                $lastName = $result['lastName'];
-            }
-        }
+        // //Query the database with Customer email to get phone number;
+        // if ($db->userExists($email, "awlcrwandavirtual")) {
+        //     // Select the user
+        //     $result = $db->userSelect($email, "awlcrwandavirtual");
+        //     // get the phone number
+        //     while ($result) {
+        //         $phone = $result['phone'];
+        //         $firstName = $result['firstName'];
+        //         $lastName = $result['lastName'];
+        //     }
+        // }
 
-        $name = $firstName . " " . $lastName;
-        require './emails.php';
+        // $name = $firstName . " " . $lastName;
+        // require './emails.php';
 
-        //Send SMS
-        $notify->viaSMS("AWLO Int", "Dear {$firstName} {$lastName}, Thank you for signing up for the online stream of African Women in Leadership Conference Rwanda 2019. Be on the lookout for your login pass in your mailbox on the 3rd of April.", $phone);
+        // //Send SMS
+        // $notify->viaSMS("AWLO Int", "Dear {$firstName} {$lastName}, Thank you for signing up for the online stream of African Women in Leadership Conference Rwanda 2019. Be on the lookout for your login pass in your mailbox on the 3rd of April.", $phone);
 
-        /**
-         * Add User to the SendPule mailing List
-         */
-        $emails = array(
-                array(
-                    'email'         =>  $email,
-                    'variables'     =>  array(
-                    'phone'         =>  $phone,
-                    'name'          =>  $firstName,
-                    'lastName'      =>  $lastName
-                )
-            )
-        );
+        // /**
+        //  * Add User to the SendPule mailing List
+        //  */
+        // $emails = array(
+        //         array(
+        //             'email'         =>  $email,
+        //             'variables'     =>  array(
+        //             'phone'         =>  $phone,
+        //             'name'          =>  $firstName,
+        //             'lastName'      =>  $lastName
+        //         )
+        //     )
+        // );
 
-        $newsletter->insertIntoList("2327165", $emails);
+        // $newsletter->insertIntoList("2327165", $emails);
 
-        // Send Email
-        $notify->viaEmail("info@awlo.org", "African Women in Leadership Organisation", $email, $name, $emailBodyDelegate, "Successful Registration for #AWLCRwanda2019");
+        // // Send Email
+        // $notify->viaEmail("info@awlo.org", "African Women in Leadership Organisation", $email, $name, $emailBodyDelegate, "Successful Registration for #AWLCRwanda2019");
 
-        header('Location: ../success.html');
+        // header('Location: ../success.html');
     }
 }
