@@ -154,20 +154,16 @@ class DB
      *
      * @return void
      */
-    public function updatePaid($tablename, $details , $wherefield, $wherevalue)
+    public function updatePaid($tablename, $details, $wherefield, $wherevalue)
     {
         $columns = array_keys($details);
         $values = array_values($details);
-        $sql = "UPDATE $tablename SET " . implode('=?, ', $columns) . "=? WHERE $wherefield = $wherevalue";
+        array_push($values, $wherevalue);
+        $sql = "UPDATE $tablename SET " . implode('=?, ', $columns) . "=? WHERE $wherefield =?";
         // echo json_encode($sql);
 
         // Create the prepared statement
         $stmt = $this->_conn->prepare($sql);
-
-        // Bind each parameter
-        foreach ($details as $key => $value) {
-            $stmt->bindParam($key, $value);
-        }
 
         // Execute the Query
         $stmt->execute($values);
