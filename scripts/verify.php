@@ -42,7 +42,7 @@ $trx = $paystack->transaction->verify(
 if (!$trx->status) {
     exit($trx->message);
 }
-if ('success' == $trx->data->status) {
+if ('success' === $trx->data->status) {
     $email = $trx->data->customer->email;
 
     // Update the database with paid
