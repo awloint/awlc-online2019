@@ -167,7 +167,7 @@ class DB
         foreach ($details as $key => $value) {
             $stmt->bindValue($key, $value);
         }
-        $stmt->bindValue($wherefield, $wherevalue)
+        $stmt->bindValue($wherefield, $wherevalue);
 
         // Execute the Query
         $stmt->execute();
