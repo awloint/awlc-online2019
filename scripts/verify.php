@@ -25,8 +25,8 @@ $newsletter = new Newsletter($apiUserId, $apiSecret);
 $date = date("Y-m-d H:i:s");
 
 $details = array(
+    "paid" => "yes",
     "paid_at" => $date,
-    "paid" => "yes"
 );
 
 // Initialize Transaction
