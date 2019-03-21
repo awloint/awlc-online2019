@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', e => {
                     return response.json()
                 })
                 .then(data => {
-                    console.log(data)
+                    // console.log(data)
                     if (data === 'user_exists') {
                         swal('Already Registered', 'You have already registered for the conference.', 'warning')
                         setTimeout(() => {

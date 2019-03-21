@@ -18,8 +18,9 @@ ini_set('display_errors', 1);
 require '../config.php';
 require './Paystack.php';
 require './DB.php';
-require './Notify.php';
-require './Newsletter.php';
+
+$currency = "NGN";
+$amount = 36200 * 100;
 
 // Capture Post Data that is coming from the form
 $firstName = $_POST['firstName'];
@@ -30,39 +31,44 @@ $country = $_POST['country'];
 $occupation = $_POST['occupation'];
 $organisation = $_POST['organisation'];
 $member = $_POST['member'];
-$referrer = $_POST['referrer'];
+$referringChannel = $_POST['referringChannel'];
 $firstConference = $_POST['firstConference'];
-$currency = $_POST['currency'];
-$amount = $_POST['amount'];
+$referrer = $_POST['referrer'];
 
-$name = $firstName . " " . $lastName;
-require './emails.php';
 
-//  Connect to the Database using PDO
-$dsn = "mysql:host=$host;dbname=$db";
-//Create PDO Connection with the dbconfig data
-$conn = new PDO($dsn, $username, $password);
+if ($country !== "Nigeria") {
+    $currency = "USD";
+}
 
-//  Check to see if the user is in the database already
-$usercheck = "SELECT * FROM awlc2019 WHERE email=?";
-// prepare the Query
-$usercheckquery = $conn->prepare($usercheck);
-//Execute the Query
-$usercheckquery->execute(array("$email"));
-//Fetch the Result
-$usercheckquery->rowCount();
-if ($usercheckquery->rowCount() > 0) {
-    // Check to ss if the user has paid
-    $usercheckpaid = "SELECT * FROM awlc2019 WHERE email=? AND paid='yes'";
-    // prepare the Query
-    $usercheckpaidquery = $conn->prepare($usercheckpaid);
-    // Execute the Query
-    $usercheckpaidquery->execute(array("$email"));
-    // Fetch the Result
-    $usercheckpaidquery->rowCount();
-    if ($usercheckpaidquery->rowCount() > 0 ) {
+if ($currency === "USD") {
+    $amount = 100 * 100;
+}
+
+$details = array(
+    "firstName" => $firstName,
+    "lastName" => $lastName,
+    "email" => $_POST['email'],
+    "phone" => $phone,
+    "country" => $country,
+    "occupation" => $occupation,
+    "organisation" => $organisation,
+    "member" => $member,
+    "referringChannel" => $referringChannel,
+    "firstConference" => $firstConference,
+    "referrer" => $referrer
+);
+
+$db = new DB($host, $db, $username, $password);
+
+// First check to see if user is in the Database
+if ($db->userExists($email, "awlcrwandavirtual")) {
+
+    // Check to see if the user has paid
+    if ($db->userExistsAndPaid($email, "awlcrwandavirtual")) {
         echo json_encode("user_exists");
+
     } else {
+
         // User has registered but hasn't paid so initiatlize payment
         $paystack = new Paystack($paystackKey);
         // throw an exception if there was a problem completing the request,
@@ -72,7 +78,7 @@ if ($usercheckquery->rowCount() > 0) {
             'amount'=> $amount, /* 20 naira */
             'email'=> $email,
             'currency' => $currency,
-            'callback_url' => 'https://awlo.org/awlc/rwanda2019/verify.php',
+            'callback_url' => 'https://awlo.org/awlc/rwanda2019/virtualconference/scripts/verify.php',
             'metadata' => json_encode(
                 [
                 'custom_fields'=> [
@@ -97,60 +103,14 @@ if ($usercheckquery->rowCount() > 0) {
             ]
         );
 
-        // status should be true if there was a successful call
-        // if (!$trx->status) {
-        //     exit($trx->message);
-        // }
-
-
         echo json_encode($trx->data->authorization_url);
 
     }
 
 } else {
-    // Insert the user into the database
-    $enteruser = "INSERT into awlc2019 (firstName,
-                        lastName,
-                        email,
-                        phone,
-                        country,
-                        occupation,
-                        organisation,
-                        member,
-                        referrer,
-                        firstConference)
-                VALUES (:firstName,
-                        :lastName,
-                        :email,
-                        :phone,
-                        :country,
-                        :occupation,
-                        :organisation,
-                        :member,
-                        :referrer,
-                        :firstConference)";
-    //  Prepare Query
-    $enteruserquery = $conn->prepare($enteruser);
-    //  Execute the Query
-    $enteruserquery->execute(
-        array(
-            "firstName" => $firstName,
-            "lastName" => $lastName,
-            "email" => $email,
-            "phone" => $phone,
-            "country" => $country,
-            "occupation" => $occupation,
-            "organisation" => $organisation,
-            "member" => $member,
-            "referrer" => $referrer,
-            "firstConference" => $firstConference
-        )
-    );
 
-    //  Fetch Result
-    $enteruserquery->rowCount();
-    // Check to see if the query executed successfully
-    if ($enteruserquery->rowCount() > 0) {
+    // Insert the user into the database
+    if ($db->insertUser("awlcrwandavirtual", $details)) {
         $paystack = new Paystack($paystackKey);
         // throw an exception if there was a problem completing the request,
         // else returns an object created from the json response
@@ -159,7 +119,7 @@ if ($usercheckquery->rowCount() > 0) {
             'amount'=> $amount, /* 20 naira */
             'email'=> $email,
             'currency' => $currency,
-            'callback_url' => 'https://awlo.org/awlc/rwanda2019/verify.php',
+            'callback_url' => 'https://awlo.org/awlc/rwanda2019/virtualconference/scripts/verify.php',
             'metadata' => json_encode(
                 [
                 'custom_fields'=> [

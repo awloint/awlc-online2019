@@ -67,6 +67,55 @@ class DB
     }
 
     /**
+     * Select User in the Database
+     *
+     * @param string $email     The Email Address to be checked
+     * @param string $tablename The name of the tale to be checked
+     *
+     * @return void
+     */
+    public function userSelect($email, $tablename)
+    {
+        $usercheck = "SELECT * FROM $tablename WHERE email=?";
+        // prepare the Query
+        $usercheckquery = $this->_conn->prepare($usercheck);
+        //Execute the Query
+        $usercheckquery->execute(array("$email"));
+        //Fetch the Result
+        $usercheckquery->rowCount();
+        if ($usercheckquery->rowCount() > 0) {
+
+            // return fields
+            $result = $usercheckquery->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        }
+        return false;
+    }
+
+    /**
+     * Check if User Exists in the Database and has paid
+     *
+     * @param string $email     The Email Address to be checked
+     * @param string $tablename The name of the tale to be checked
+     *
+     * @return void
+     */
+    public function userExistsAndPaid($email, $tablename)
+    {
+        $usercheck = "SELECT * FROM $tablename WHERE email=? AND paid='yes'";
+        // prepare the Query
+        $usercheckquery = $this->_conn->prepare($usercheck);
+        // Execute the Query
+        $usercheckquery->execute(array("$email"));
+        // Fetch the Result
+        $usercheckquery->rowCount();
+        if ($usercheckquery->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Inserts a New User in to the Database
      *
      * @param string $tablename The Name of the table to insert user
@@ -90,6 +139,40 @@ class DB
         $enteruserquery->rowCount();
 
         if ($enteruserquery->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Update the Database when user has paid
+     *
+     * @param string $tablename   The name of the table to Update
+     * @param array  $details     The details to update in the database
+     * @param string $chosenfield The unique field in the database
+     *
+     * @return void
+     */
+    public function updatePaid($tablename, $details, $chosenfield)
+    {
+        $sql = "UPDATE {$tablename} SET {$set} WHERE {$chosenfield} = ?";
+
+        // Create the prepared statement
+        $stmt = $this->_conn->prepare($sql);
+
+        // Bind each parameter
+        for ($i=0; $i<count($fields); $i++) {
+            $stmt->bindParam($i+1, $fields[$i]);
+        }
+
+        // Execute the Query
+        $stmt->execute();
+
+        //  Fetch Result
+        $stmt->rowCount();
+
+        // Check if execution was successfull
+        if ($stmt->rowCount() > 0) {
             return true;
         }
         return false;
