@@ -158,27 +158,27 @@ class DB
     {
         $columns = array_keys($details);
         $sql = "UPDATE $tablename SET " . implode('=?, ', $columns) . "=? WHERE $wherefield = ?";
-        echo json_encode($sql);
+        // echo json_encode($sql);
 
-        // // Create the prepared statement
-        // $stmt = $this->_conn->prepare($sql);
+        // Create the prepared statement
+        $stmt = $this->_conn->prepare($sql);
 
-        // // Bind each parameter
-        // foreach ($details as $key => $value) {
-        //     $stmt->bindValue($key, $value);
-        // }
-        // $stmt->bindValue($wherefield, $wherevalue)
+        // Bind each parameter
+        foreach ($details as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->bindValue($wherefield, $wherevalue)
 
-        // // Execute the Query
-        // $stmt->execute();
+        // Execute the Query
+        $stmt->execute();
 
-        // //  Fetch Result
-        // $stmt->rowCount();
+        //  Fetch Result
+        $stmt->rowCount();
 
-        // // Check if execution was successfull
-        // if ($stmt->rowCount() > 0) {
-        //     return true;
-        // }
-        // return false;
+        // Check if execution was successfull
+        if ($stmt->rowCount() > 0) {
+            return true;
+        }
+        return false;
     }
 }
