@@ -147,16 +147,17 @@ class DB
     /**
      * Update the Database when user has paid
      *
-     * @param string $tablename   The name of the table to Update
-     * @param array  $details     The details to update in the database
-     * @param string $chosenfield The unique field in the database
+     * @param string $tablename  The name of the table to Update
+     * @param array  $details    The details to update in the database
+     * @param string $wherefield The unique field in the database
+     * @param string $wherevalue The value of the unique field
      *
      * @return void
      */
-    public function updatePaid($tablename, $details , $chosenfield)
+    public function updatePaid($tablename, $details , $wherefield, $wherevalue)
     {
         $columns = array_keys($details);
-        $sql = "UPDATE $tablename SET " . implode('=?, ' , $columns) . " WHERE $chosenfield = ?";
+        $sql = "UPDATE $tablename SET " . implode('=?, ', $columns) . "=? WHERE $wherefield = ?";
         echo json_encode($sql);
 
         // // Create the prepared statement
@@ -166,6 +167,7 @@ class DB
         // foreach ($details as $key => $value) {
         //     $stmt->bindValue($key, $value);
         // }
+        // $stmt->bindValue($wherefield, $wherevalue)
 
         // // Execute the Query
         // $stmt->execute();

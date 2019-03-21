@@ -46,7 +46,7 @@ if ('success' == $trx->data->status) {
     $email = $trx->data->customer->email;
 
     // Update the database with paid
-    if ($db->updatePaid("awlcrwandavirtual", $details, $email)) {
+    if ($db->updatePaid("awlcrwandavirtual", $details, "email", $email)) {
 
         // //Query the database with Customer email to get phone number;
         // if ($db->userExists($email, "awlcrwandavirtual")) {
