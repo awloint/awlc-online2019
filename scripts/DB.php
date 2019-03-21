@@ -157,6 +157,7 @@ class DB
     public function updatePaid($tablename, $details , $wherefield, $wherevalue)
     {
         $columns = array_keys($details);
+        $values = array_values($details);
         $sql = "UPDATE $tablename SET " . implode('=?, ', $columns) . "=? WHERE $wherefield = $wherevalue";
         // echo json_encode($sql);
 
@@ -169,7 +170,7 @@ class DB
         }
 
         // Execute the Query
-        $stmt->execute($details);
+        $stmt->execute($values);
 
         //  Fetch Result
         $stmt->rowCount();
