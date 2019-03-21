@@ -86,8 +86,7 @@ class DB
         if ($usercheckquery->rowCount() > 0) {
 
             // return fields
-            $result = $usercheckquery->fetch(PDO::FETCH_ASSOC);
-            return $result;
+            return $usercheckquery->fetch(PDO::FETCH_ASSOC);
         }
         return false;
     }
