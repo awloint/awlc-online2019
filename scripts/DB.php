@@ -153,7 +153,7 @@ class DB
      *
      * @return void
      */
-    public function updatePaid($tablename, $details, $chosenfield)
+    public function updatePaid($tablename, $details = [], $chosenfield)
     {
         $sql = "UPDATE {$tablename} SET {$details} WHERE {$chosenfield} = ?";
 
@@ -166,7 +166,7 @@ class DB
         }
 
         // Execute the Query
-        $stmt->execute($details);
+        $stmt->execute();
 
         //  Fetch Result
         $stmt->rowCount();
