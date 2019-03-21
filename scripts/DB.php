@@ -166,7 +166,7 @@ class DB
         }
 
         // Execute the Query
-        $stmt->execute();
+        $stmt->execute($details);
 
         //  Fetch Result
         $stmt->rowCount();
