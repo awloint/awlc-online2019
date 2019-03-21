@@ -162,7 +162,7 @@ class DB
 
         // Bind each parameter
         foreach ($details as $key => $value) {
-            $stmt->bindParam(":$key", $details[$key]);
+            $stmt->bindValue($key, $value);
         }
 
         // Execute the Query
