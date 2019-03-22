@@ -79,7 +79,7 @@ if ('success' === $trx->data->status) {
             )
         );
 
-        $newsletter->insertIntoList("2327165", $emails);
+        $newsletter->insertIntoList("2328121", $emails);
 
         // Send Email
         $notify->viaEmail("info@awlo.org", "African Women in Leadership Organisation", $email, $name, $emailBodyDelegate, "Successful Registration for #AWLCRwanda2019");
