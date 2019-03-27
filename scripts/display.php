@@ -24,7 +24,7 @@ $referrer = $_POST['referrer'];
 
 $db = new DB($host, $db, $username, $password);
 
-if (strpos($referrer, 'awlcvirtualconference') !== false) {
+if (strpos($referrer, 'virtualconference') !== false) {
     $registeredusers = $db->query("SELECT * FROM awlcrwandavirtual");
 } else {
 $registeredusers = $db->query("SELECT * FROM awlcrwandavirtual WHERE referrer='{$referrer}'");
