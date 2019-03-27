@@ -66,6 +66,14 @@ class DB
         return false;
     }
 
+    public function query(string $query)
+    {
+        // prepare the Query
+        $prepare = $this->_conn->query($query);
+
+        return $prepare;
+    }
+
     /**
      * Select User in the Database
      *
